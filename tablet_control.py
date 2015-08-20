@@ -1,5 +1,6 @@
 import subprocess
 import sys
+import time
 import json
 
 #TODO: replace "handle failure" comments with logging suitable for a daemon
@@ -22,29 +23,27 @@ def rotate_input(device, orientation):
 	args = ["xinput", "set-prop", device, "Coordinate Transformation Matrix"]
 	for entry in ctms[orientation].split(" "):
 		args.append(entry)
-	ret = subprocess.call(args)
-	#handle failure
+	return subprocess.call(args)
 
 def rotate_screen(orientation):
 	#change orientation to one of normal, left, right, inverse
-	ret = subprocess.call(["xrandr", "-o", "%s" % orientation])
-	#handle failure
+	return subprocess.call(["xrandr", "-o", "%s" % orientation])
 
 def xinput_device_action(device, action):
 	#call a simple actions such as enable or disable for a device
-	ret = subprocess.call(["xinput","%s" %action,"%s" % device])
-	#handle failure
+	return subprocess.call(["xinput","%s" %action,"%s" % device])
 
 def setNormal():
+	rotate_screen("normal")
 	for category, items in devices.items():
 		for dev in items:
 			xinput_device_action(dev, "enable")
 			if category != 'keyboards':
 				rotate_input(dev, "normal")
-	rotate_screen("normal")
 
 #effectively identical to setTabled("inverted")
 def setTent():
+	rotate_screen("inverted")
 	for category, items in devices.items():
 		if category in ["keyboards","trackpoints", "touchpads"]:
 			for dev in items:
@@ -52,27 +51,31 @@ def setTent():
 		else:
 			for dev in items:
 				rotate_input(dev, "inverted")	
-	rotate_screen("inverted")
 
 def setTablet(orientation):
+	rotate_screen(orientation)
 	for category, items in devices.items():
 		if category in ["keyboards","trackpoints", "touchpads"]:
 			for dev in items:
-				xinput_device_action(dev, "disable")
+				print("Deactivate inputs once this works")
+#				xinput_device_action(dev, "disable")
 		else:
 			for dev in items:
-				rotate_input(dev, orientation)	
-	rotate_screen(orientation)
+				ret = rotate_input(dev, orientation)
+				while ret:
+					time.sleep(0.5)
+					ret = rotate_input(dev, orientation)
 
 def setScratchpad():
+	rotate_screen("normal")
 	for category, items in devices.items():
 		if category in ["trackpoints", "touchpads", "touchscreens"]:
 			for dev in items:
 				xinput_device_action(dev, "disable")
 		else:
-			for dev in items:
-				rotate_input(dev, "normal")	
-	rotate_screen("normal")
+			if category != "keyboards":
+				for dev in items:
+					rotate_input(dev, "normal")	
 	 	
 def loadDeviceConfiguration(filename):
 	#read input devices from config
