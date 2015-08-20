@@ -57,14 +57,16 @@ def setTablet(orientation):
 	for category, items in devices.items():
 		if category in ["keyboards","trackpoints", "touchpads"]:
 			for dev in items:
-				print("Deactivate inputs once this works")
+				pass
 #				xinput_device_action(dev, "disable")
 		else:
 			for dev in items:
 				ret = rotate_input(dev, orientation)
-				while ret:
-					time.sleep(0.5)
+				i = 0 
+				while ret and i < 5:
+					time.sleep(1)
 					ret = rotate_input(dev, orientation)
+					i = i + 1
 
 def setScratchpad():
 	rotate_screen("normal")
