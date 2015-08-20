@@ -43,6 +43,7 @@ def setNormal():
 				rotate_input(dev, "normal")
 	rotate_screen("normal")
 
+#effectively identical to setTabled("inverted")
 def setTent():
 	for category, items in devices.items():
 		if category in ["keyboards","trackpoints", "touchpads"]:
@@ -53,6 +54,25 @@ def setTent():
 				rotate_input(dev, "inverted")	
 	rotate_screen("inverted")
 
+def setTablet(orientation):
+	for category, items in devices.items():
+		if category in ["keyboards","trackpoints", "touchpads"]:
+			for dev in items:
+				xinput_device_action(dev, "disable")
+		else:
+			for dev in items:
+				rotate_input(dev, orientation)	
+	rotate_screen(orientation)
+
+def setScratchpad():
+	for category, items in devices.items():
+		if category in ["trackpoints", "touchpads", "touchscreens"]:
+			for dev in items:
+				xinput_device_action(dev, "disable")
+		else:
+			for dev in items:
+				rotate_input(dev, "normal")	
+	rotate_screen("normal")
 	 	
 def loadDeviceConfiguration(filename):
 	#read input devices from config
@@ -60,23 +80,23 @@ def loadDeviceConfiguration(filename):
 		devs = json.load(conf)
 	return devs
 
-def main(mode="normal"):
+def main(mode="normal", orientation="normal"):
 		if mode == "normal":
 			setNormal()
 		elif mode == "tent":
 			setTent()
 		elif mode == "tablet":
-			print("tablet called")
-		#	setTablet()
+			setTablet(orientation)
 		elif mode == "scratchpad":
-			print("scratch called")
-		#	setScratchpad()
+			setScratchpad()
 		else:
 			print("Unsupported mode")	
 	
 if __name__ == '__main__':
 	devices = loadDeviceConfiguration("inputDevices.json")	
-	if len(sys.argv) > 1:
+	if len(sys.argv) > 2:
+		main(sys.argv[1], sys.argv[2])
+	elif len(sys.argv) > 1:
 		main(sys.argv[1])
 	else:
 		main()
