@@ -13,7 +13,7 @@ def parse_devices(raw_devices):
 				out.append(tmp.strip())
 				tmp = ""
 				break
-			if c.isalpha() or c.isspace() or c.isnumeric():
+			if c.isalpha() or c.isspace() or c.isnumeric() or c =="/":
 				tmp = tmp + c
 	return out 
 
