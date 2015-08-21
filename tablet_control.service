@@ -1,0 +1,15 @@
+[Unit]
+Description=Automated rotation of display and input devices
+Requires=display-manager.serivce
+After=display-manager.service
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/python /home/michael/Code/TabletControl/midor/monitor_accel.py
+KillMode=process
+Environment="DISPLAY=:0" "XAUTHORITY=/home/michael/.Xauthority"
+Restart=on-failure
+RestartSec=2
+
+[Install]
+WantedBy=multi-user.target
