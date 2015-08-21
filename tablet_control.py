@@ -38,6 +38,8 @@ def set_normal(devices):
 	ret = rotate_screen("normal")
 	all_ok &= ret
 	for category, items in devices.items():
+		if category == "accelerometers":
+			continue
 		for dev in items:
 			ret = xinput_device_action(dev, "enable")
 			all_ok &= ret
@@ -52,6 +54,8 @@ def set_tent(devices):
 	ret = rotate_screen("inverted")
 	all_ok &= ret
 	for category, items in devices.items():
+		if category == "accelerometers":
+			continue
 		if category in ["keyboards","trackpoints", "touchpads"]:
 			for dev in items:
 				ret = xinput_device_action(dev, "disable")
@@ -67,6 +71,8 @@ def set_tablet(devices, orientation):
 	ret = rotate_screen(orientation)
 	all_ok &= ret
 	for category, items in devices.items():
+		if category == "accelerometers":
+			continue
 		if category in ["keyboards","trackpoints", "touchpads"]:
 			for dev in items:
 				ret = xinput_device_action(dev, "disable")
@@ -81,6 +87,8 @@ def set_scratchpad(devices):
 	rotate_screen("normal")
 	all_ok = True
 	for category, items in devices.items():
+		if category == "accelerometers":
+			continue
 		if category in ["trackpoints", "touchpads", "touchscreens"]:
 			for dev in items:
 				ret = xinput_device_action(dev, "disable")
