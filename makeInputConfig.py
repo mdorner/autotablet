@@ -1,5 +1,7 @@
 import subprocess
 import sys
+import os
+from os import path
 import json
 
 encoding = "utf-8"
@@ -40,6 +42,14 @@ def classify_devices(device_names):
 			known_devices['touchscreens'].append(device)
 	return known_devices
 
+def find_accelerometers(device_path="/sys/bus/iio/devices/"):
+	accelerometers = []
+	for directory in os.listdir(device_path):
+		with open(path.join(device_path, directory, 'name')) as candidate:
+			if "accel" in candidate.read():
+				accelerometers.append(path.join(device_path,directory))
+	return accelerometers	
+
 def main():
 	#list input devices
 	stdout = subprocess.check_output(["xinput","list"])
@@ -52,12 +62,9 @@ def main():
 	parsed_devices = parse_devices(decoded)
 	#categorize the devices
 	classified_devices = classify_devices(parsed_devices)
-	#Report findings
-	print("Identified the following devices:")
-	for category, devices in classified_devices.items():
-		print(str(category) + ":")
-		for device in devices:
-			print(device)
+	accelerometers = find_accelerometers()
+	if len(accelerometers) > 0:
+		classified_devices['accelerometers'] = accelerometers
 	#write to file
 	conf = open("inputDevices.json","w")
 	conf.truncate()

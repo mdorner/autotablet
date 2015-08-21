@@ -33,7 +33,7 @@ def xinput_device_action(device, action):
 	#call a simple actions such as enable or disable for a device
 	return subprocess.call(["xinput","%s" %action,"%s" % device])
 
-def setNormal():
+def set_normal():
 	rotate_screen("normal")
 	for category, items in devices.items():
 		for dev in items:
@@ -42,7 +42,7 @@ def setNormal():
 				rotate_input(dev, "normal")
 
 #effectively identical to setTabled("inverted")
-def setTent():
+def set_tent():
 	rotate_screen("inverted")
 	for category, items in devices.items():
 		if category in ["keyboards","trackpoints", "touchpads"]:
@@ -52,7 +52,7 @@ def setTent():
 			for dev in items:
 				rotate_input(dev, "inverted")	
 
-def setTablet(orientation):
+def set_tablet(orientation):
 	rotate_screen(orientation)
 	for category, items in devices.items():
 		if category in ["keyboards","trackpoints", "touchpads"]:
@@ -62,13 +62,16 @@ def setTablet(orientation):
 		else:
 			for dev in items:
 				ret = rotate_input(dev, orientation)
-				i = 0 
-				while ret and i < 5:
+				#this code is required to address a bug on the thinkpad yoga 12
+				#the touchscreen can sometimes not be found, which requires
+				#repeated attempts. the loop variable prevents infinite loops
+				for i in range(5):
 					time.sleep(1)
 					ret = rotate_input(dev, orientation)
-					i = i + 1
+					if ret:
+						break
 
-def setScratchpad():
+def set_scratchpad():
 	rotate_screen("normal")
 	for category, items in devices.items():
 		if category in ["trackpoints", "touchpads", "touchscreens"]:
@@ -79,7 +82,7 @@ def setScratchpad():
 				for dev in items:
 					rotate_input(dev, "normal")	
 	 	
-def loadDeviceConfiguration(filename):
+def load_device_configuration(filename):
 	#read input devices from config
 	with open(filename,"r") as conf:
 		devs = json.load(conf)
@@ -87,18 +90,18 @@ def loadDeviceConfiguration(filename):
 
 def main(mode="normal", orientation="normal"):
 		if mode == "normal":
-			setNormal()
+			set_normal()
 		elif mode == "tent":
-			setTent()
+			set_tent()
 		elif mode == "tablet":
-			setTablet(orientation)
+			set_tablet(orientation)
 		elif mode == "scratchpad":
-			setScratchpad()
+			set_scratchpad()
 		else:
 			print("Unsupported mode")	
 	
 if __name__ == '__main__':
-	devices = loadDeviceConfiguration("inputDevices.json")	
+	devices = load_device_configuration("inputDevices.json")	
 	if len(sys.argv) > 2:
 		main(sys.argv[1], sys.argv[2])
 	elif len(sys.argv) > 1:
