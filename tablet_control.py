@@ -23,64 +23,73 @@ def rotate_input(device, orientation):
 	args = ["xinput", "set-prop", device, "Coordinate Transformation Matrix"]
 	for entry in ctms[orientation].split(" "):
 		args.append(entry)
-	return subprocess.call(args)
+	return subprocess.call(args) == 0
 
 def rotate_screen(orientation):
 	#change orientation to one of normal, left, right, inverse
-	return subprocess.call(["xrandr", "-o", "%s" % orientation])
+	return subprocess.call(["xrandr", "-o", "%s" % orientation]) == 0
 
 def xinput_device_action(device, action):
 	#call a simple actions such as enable or disable for a device
-	return subprocess.call(["xinput","%s" %action,"%s" % device])
+	return subprocess.call(["xinput","%s" %action,"%s" % device]) == 0
 
 def set_normal(devices):
-	rotate_screen("normal")
+	all_ok = True
+	ret = rotate_screen("normal")
+	all_ok &= ret
 	for category, items in devices.items():
 		for dev in items:
-			xinput_device_action(dev, "enable")
+			ret = xinput_device_action(dev, "enable")
+			all_ok &= ret
 			if category != 'keyboards':
-				rotate_input(dev, "normal")
+				ret = rotate_input(dev, "normal")
+				all_ok &= ret
+	return all_ok
 
 #effectively identical to setTabled("inverted")
 def set_tent(devices):
-	rotate_screen("inverted")
+	all_ok = True
+	ret = rotate_screen("inverted")
+	all_ok &= ret
 	for category, items in devices.items():
 		if category in ["keyboards","trackpoints", "touchpads"]:
 			for dev in items:
-				xinput_device_action(dev, "disable")
+				ret = xinput_device_action(dev, "disable")
+				all_ok &= ret
 		else:
 			for dev in items:
-				rotate_input(dev, "inverted")	
+				ret = rotate_input(dev, "inverted")	
+				all_ok &= ret
+	return all_ok
 
 def set_tablet(devices, orientation):
-	rotate_screen(orientation)
+	all_ok = True
+	ret = rotate_screen(orientation)
+	all_ok &= ret
 	for category, items in devices.items():
 		if category in ["keyboards","trackpoints", "touchpads"]:
 			for dev in items:
-				pass
-#				xinput_device_action(dev, "disable")
+				ret = xinput_device_action(dev, "disable")
+				all_ok &= ret
 		else:
 			for dev in items:
 				ret = rotate_input(dev, orientation)
-				#this code is required to address a bug on the thinkpad yoga 12
-				#the touchscreen can sometimes not be found, which requires
-				#repeated attempts. the loop variable prevents infinite loops
-				for i in range(5):
-					time.sleep(1)
-					ret = rotate_input(dev, orientation)
-					if ret:
-						break
+				all_ok &= ret
+	return all_ok
 
 def set_scratchpad(devices):
 	rotate_screen("normal")
+	all_ok = True
 	for category, items in devices.items():
 		if category in ["trackpoints", "touchpads", "touchscreens"]:
 			for dev in items:
-				xinput_device_action(dev, "disable")
+				ret = xinput_device_action(dev, "disable")
 		else:
 			if category != "keyboards":
 				for dev in items:
-					rotate_input(dev, "normal")	
+					ret = rotate_input(dev, "normal")	
+		all_ok &= ret
+	return all_ok 
 	 	
 def load_device_configuration(filename):
 	#read input devices from config
