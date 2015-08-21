@@ -38,6 +38,8 @@ def read_accel(accel):
 	
 def determine_orientation(accel):
 	xVal, yVal, scaleVal = read_accel(accel)
+	print("x: " + str(xVal) + " y: " + str(yVal) +
+				 " scale: " + str(scaleVal))
 	if abs(xVal) < 3 and yVal < -7:
 		ort = "normal"
 	elif xVal > 7 and abs(yVal) < 3:
@@ -50,19 +52,33 @@ def determine_orientation(accel):
 		ort = "unknown"
 	return ort
 
+def adjust_orientation(devices, orientation, previous="unknown"):
+	if orientation != previous:	
+		if orientation == "normal":
+			tc.set_normal(devices)
+		elif orientation == "left":
+			tc.set_tablet(devices, "left")
+		elif orientation == "right":
+			tc.set_tablet(devices, "right")	
+		elif orientation == "inverted":
+			tc.set_tent(devices)
+		else:
+			print ("unknown orientation")
+	
+
 def main(conf="inputDevices.json"):
 	devices = tc.load_device_configuration(conf)
 	accelerometers = devices['accelerometers']
 	print("Found accelerometers: " + str(accelerometers))
 	accels = open_all_accelerometers(accelerometers)
+	previous = "unknown"
 	while(accels_readable(accels)):
 		for accel in accels:
 			orientation = determine_orientation(accel)
 			print ("My orientation is " + orientation)
-#		print("x: " + str(xVal) + " y: " + str(yVal) +
-#				 " scale: " + str(scaleVal))
-		
+		adjust_orientation(devices, orientation, previous)
 		time.sleep(1.0)
+		previous = orientation
 	close_all_accelerometers(accels)	
 
 if __name__ == '__main__':

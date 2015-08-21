@@ -33,7 +33,7 @@ def xinput_device_action(device, action):
 	#call a simple actions such as enable or disable for a device
 	return subprocess.call(["xinput","%s" %action,"%s" % device])
 
-def set_normal():
+def set_normal(devices):
 	rotate_screen("normal")
 	for category, items in devices.items():
 		for dev in items:
@@ -42,7 +42,7 @@ def set_normal():
 				rotate_input(dev, "normal")
 
 #effectively identical to setTabled("inverted")
-def set_tent():
+def set_tent(devices):
 	rotate_screen("inverted")
 	for category, items in devices.items():
 		if category in ["keyboards","trackpoints", "touchpads"]:
@@ -52,7 +52,7 @@ def set_tent():
 			for dev in items:
 				rotate_input(dev, "inverted")	
 
-def set_tablet(orientation):
+def set_tablet(devices, orientation):
 	rotate_screen(orientation)
 	for category, items in devices.items():
 		if category in ["keyboards","trackpoints", "touchpads"]:
@@ -71,7 +71,7 @@ def set_tablet(orientation):
 					if ret:
 						break
 
-def set_scratchpad():
+def set_scratchpad(devices):
 	rotate_screen("normal")
 	for category, items in devices.items():
 		if category in ["trackpoints", "touchpads", "touchscreens"]:
@@ -90,13 +90,13 @@ def load_device_configuration(filename):
 
 def main(mode="normal", orientation="normal"):
 		if mode == "normal":
-			set_normal()
+			set_normal(devices)
 		elif mode == "tent":
-			set_tent()
+			set_tent(devices)
 		elif mode == "tablet":
-			set_tablet(orientation)
+			set_tablet(devices, orientation)
 		elif mode == "scratchpad":
-			set_scratchpad()
+			set_scratchpad(devices)
 		else:
 			print("Unsupported mode")	
 	
