@@ -1,3 +1,7 @@
+#These values have been the rough boundaries of how I use my thinkpad yoga12
+#in the different modes. They may differ considerably for other user/notebooks
+#Directly reading these values from a config should be considered if that is
+#the regular case
 Standing on table:
 	x ~ 0, y in [-6.5,-10] 
 Tent mode:
