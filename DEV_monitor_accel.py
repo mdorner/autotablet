@@ -43,12 +43,12 @@ def determine_mode(accel):
 	#fairly horizontal position
 	if abs(xVal) < 3:
 		#display is upright
-		if yVal < -6.5:
+		if yVal < -4:
 			mode = "normal"
 		#display is ~180 deg open
 		elif yVal < 1:
 			mode = "scratchpad"	
-		elif yVal < 3:
+		elif yVal < 6:
 			mode = "itablet"
 		elif yVal < 10:
 			mode = "tent"	
@@ -58,27 +58,28 @@ def determine_mode(accel):
 		if xVal > 0:
 			mode = "ltablet"
 		else:
-			mode = "rtabelt"
+			mode = "rtablet"
 	return mode
 
 def switch_mode(devices, mode):
 	if "tablet" in mode:
 		if mode.startswith("i"):
-			tc.set_tablet(devices, "inverted")
+			ret = tc.set_tablet(devices, "inverted")
 		elif mode.startswith("l"):
-			tc.set_tablet(devices, "left")
+			ret =  tc.set_tablet(devices, "left")
 		elif mode.startswith("r"):
-			tc.set_tablet(devices, "right")
+			ret =  tc.set_tablet(devices, "right")
 		else: 
-			return
+			ret = False
 
 	else:
 		if mode == "tent":
-			tc.set_tent(devices)
+			ret = tc.set_tent(devices)
 		elif mode == "scratchpad":
-			tc.set_scratchpad(devices)
+			ret = tc.set_scratchpad(devices)
 		elif mode == "normal":
-			tc.set_normal(devices)
+			ret = tc.set_normal(devices)
+	return ret
 
 def main(conf="inputDevices.json"):
 	devices = tc.load_device_configuration(conf)
@@ -90,8 +91,8 @@ def main(conf="inputDevices.json"):
 		for accel in accels:
 			mode = determine_mode(accel)
 			print ("My orientation is " + mode)
-		if mode != previous:
-			switch_mode(devices, mode)
+		if mode != previous or not ok:
+			ok = switch_mode(devices, mode)
 		time.sleep(1.0)
 		previous = mode
 	close_all_accelerometers(accels)	
