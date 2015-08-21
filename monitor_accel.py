@@ -64,21 +64,22 @@ def determine_mode(accel):
 def switch_mode(devices, mode):
 	if "tablet" in mode:
 		if mode.startswith("i"):
-			return tc.set_tablet(devices, "inverted")
+			ret = tc.set_tablet(devices, "inverted")
 		elif mode.startswith("l"):
-			return tc.set_tablet(devices, "left")
+			ret =  tc.set_tablet(devices, "left")
 		elif mode.startswith("r"):
-			return tc.set_tablet(devices, "right")
+			ret =  tc.set_tablet(devices, "right")
 		else: 
-			return False
+			ret = False
 
 	else:
 		if mode == "tent":
-			return tc.set_tent(devices)
+			ret = tc.set_tent(devices)
 		elif mode == "scratchpad":
-			return tc.set_scratchpad(devices)
+			ret = tc.set_scratchpad(devices)
 		elif mode == "normal":
-			return tc.set_normal(devices)
+			ret = tc.set_normal(devices)
+	return ret
 
 def main(conf="inputDevices.json"):
 	devices = tc.load_device_configuration(conf)
