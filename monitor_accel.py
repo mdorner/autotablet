@@ -1,4 +1,4 @@
-#monitor_accel.py
+#!/usr/bin/python3
 """
 Copyright (C) 2015 Michael G. Dorner
 
@@ -9,6 +9,7 @@ This program is distributed in the hope that it will be useful, but WITHOUT ANY 
 You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>. 
 """
 import sys
+import os
 from os import path
 import time
 import tablet_control as tc
@@ -91,9 +92,17 @@ def switch_mode(devices, mode):
 			ret = tc.set_normal(devices)
 	return ret
 
+def find_accelerometers(device_path="/sys/bus/iio/devices/"):
+    accelerometers = []
+    for directory in os.listdir(device_path):
+        with open(path.join(device_path, directory, 'name')) as candidate:
+            if "iio:device" in directory and "accel" in candidate.read():
+                accelerometers.append(path.join(device_path,directory))
+    return accelerometers
+
 def main(conf="inputDevices.json"):
 	devices = tc.load_device_configuration(conf)
-	accelerometers = devices['accelerometers']
+	accelerometers = find_accelerometers()
 #	print("Found accelerometers: " + str(accelerometers))
 	accels = open_all_accelerometers(accelerometers)
 	previous = "unknown"
