@@ -46,7 +46,7 @@ def find_accelerometers(device_path="/sys/bus/iio/devices/"):
 	accelerometers = []
 	for directory in os.listdir(device_path):
 		with open(path.join(device_path, directory, 'name')) as candidate:
-			if "accel" in candidate.read():
+			if "iio:device" in directory and "accel" in candidate.read():
 				accelerometers.append(path.join(device_path,directory))
 	return accelerometers	
 
