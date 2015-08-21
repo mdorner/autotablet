@@ -3,11 +3,11 @@ Standing on table:
 Tent mode:
 	x ~ 0, y in [6.5, 10]
 Scratchpad mode:
-	x [-1.5, 1.5], y [-9, 0]
+	x [-1.5, 1.5], y [-3, 1]
+Tablet mode inverted:
+	x [-1.5, 1.5], y [1, 6.5]
 Tablet mode left:
  	x > abs(y), x [3.5,10], y[-3,3]
 Tablet mode right:
 	x < abs(y), x [-10, -3.5], y [-3,3]
-Tablet mode inverted:
-	x [-1.5, 1.5], y [0, 9]
 
