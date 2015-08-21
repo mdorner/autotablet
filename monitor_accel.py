@@ -38,8 +38,8 @@ def read_accel(accel):
 	
 def determine_mode(accel):
 	xVal, yVal, scaleVal = read_accel(accel)
-	print("x: " + str(xVal) + " y: " + str(yVal) +
-				 " scale: " + str(scaleVal))
+#	print("x: " + str(xVal) + " y: " + str(yVal) +
+#				 " scale: " + str(scaleVal))
 	#fairly horizontal position
 	if abs(xVal) < 3:
 		#display is upright
@@ -84,13 +84,13 @@ def switch_mode(devices, mode):
 def main(conf="inputDevices.json"):
 	devices = tc.load_device_configuration(conf)
 	accelerometers = devices['accelerometers']
-	print("Found accelerometers: " + str(accelerometers))
+#	print("Found accelerometers: " + str(accelerometers))
 	accels = open_all_accelerometers(accelerometers)
 	previous = "unknown"
 	while(accels_readable(accels)):
 		for accel in accels:
 			mode = determine_mode(accel)
-			print ("My orientation is " + mode)
+#			print ("My orientation is " + mode)
 		if mode != previous or not ok:
 			ok = switch_mode(devices, mode)
 		time.sleep(1.0)
