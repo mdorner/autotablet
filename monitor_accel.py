@@ -73,6 +73,7 @@ def determine_mode(accel):
 	return mode
 
 def switch_mode(devices, mode):
+	ret = False
 	if "tablet" in mode:
 		if mode.startswith("i"):
 			ret = tc.set_tablet(devices, "inverted")
@@ -80,9 +81,6 @@ def switch_mode(devices, mode):
 			ret =  tc.set_tablet(devices, "left")
 		elif mode.startswith("r"):
 			ret =  tc.set_tablet(devices, "right")
-		else: 
-			ret = False
-
 	else:
 		if mode == "tent":
 			ret = tc.set_tent(devices)
@@ -100,7 +98,7 @@ def find_accelerometers(device_path="/sys/bus/iio/devices/"):
                 accelerometers.append(path.join(device_path,directory))
     return accelerometers
 
-def main(conf="inputDevices.json"):
+def main(conf="/home/michael/Code/TabletControl/midor/inputDevices.json"):
 	devices = tc.load_device_configuration(conf)
 	accelerometers = find_accelerometers()
 #	print("Found accelerometers: " + str(accelerometers))

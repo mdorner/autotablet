@@ -120,7 +120,7 @@ def main(mode="normal", orientation="normal"):
 			print("Unsupported mode")	
 	
 if __name__ == '__main__':
-	devices = load_device_configuration("inputDevices.json")	
+	devices = load_device_configuration("/home/michael/Code/TabletControl/midor/inputDevices.json")	
 	if len(sys.argv) > 2:
 		main(sys.argv[1], sys.argv[2])
 	elif len(sys.argv) > 1:
