@@ -36,6 +36,11 @@ def close_accelerometer(accel):
 		close(desc)
 
 def accels_readable(accels):
+	ret = True
+	for accel in accels:
+		x,y,scale = accel
+		ret &= x.readable() and y.readable() and scale.readable()
+	#need to insert code to check whether the accel can bke read or not
 	return True
 
 def read_accel(accel):
@@ -98,22 +103,28 @@ def find_accelerometers(device_path="/sys/bus/iio/devices/"):
                 accelerometers.append(path.join(device_path,directory))
     return accelerometers
 
-def main(conf="/home/michael/Code/TabletControl/midor/inputDevices.json"):
+def main(conf="/home/michael/code/TabletControl/midor/inputDevices.json"):
 	devices = tc.load_device_configuration(conf)
 	accelerometers = find_accelerometers()
 #	print("Found accelerometers: " + str(accelerometers))
 	accels = open_all_accelerometers(accelerometers)
 	previous = "unknown"
-	while(accels_readable(accels)):
-		for accel in accels:
-			mode = determine_mode(accel)
-#			print ("My orientation is " + mode)
-		if mode != previous or not ok:
-			ok = switch_mode(devices, mode)
-		time.sleep(1.0)
-		previous = mode
-	close_all_accelerometers(accels)	
+	try:
+		while(accels_readable(accels)):
+			for accel in accels:
+				mode = determine_mode(accel)
+#				print ("My orientation is " + mode)
+				if mode != previous or not ok:
+					ok = switch_mode(devices, mode)
+			time.sleep(1.0)
+			previous = mode
+	except OSError:
+		print("Cannot recover from error" + str(sys.exc_info()[0]))
+		tc.set_normal(devices)
+		close_all_accelerometers(accels)	
+		sys.exit(1)
 	tc.set_normal(devices)
+	close_all_accelerometers(accels)	
 
 if __name__ == '__main__':
 	main()

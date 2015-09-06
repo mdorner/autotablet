@@ -94,11 +94,12 @@ def set_scratchpad(devices):
 		if category in ["trackpoints", "touchpads", "touchscreens"]:
 			for dev in items:
 				ret = xinput_device_action(dev, "disable")
+				all_ok &= ret
 		else:
 			if category != "keyboards":
 				for dev in items:
 					ret = rotate_input(dev, "normal")	
-		all_ok &= ret
+					all_ok &= ret
 	return all_ok 
 	 	
 def load_device_configuration(filename):
