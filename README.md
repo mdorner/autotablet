@@ -15,12 +15,12 @@ Based on my experience from trying to make this work using what others have prov
 
 I hope that by defining these three tasks, as many people as possible can use this code to do at least part of the work.
 
-Existing issues:
+## Existing issues:
 
-Mode detection currently does not handle the accelerometer's file becoming unreadable after a sleep phase well and will exit in case that happens.
+* Mode detection currently does not handle the accelerometer's file becoming unreadable after a sleep phase well and will exit in case that happens.
 
-Mode detection uses a hard-coded configuration of modes
+* Mode detection uses a hard-coded configuration of modes
 
-For my hardware some devices may be unavailable for some time after rotating the screen, which can lead to failure of the proper rotation, which necessitates checking whether the mode change was successful.
+* For my hardware some devices may be unavailable for some time after rotating the screen, which can lead to failure of the proper rotation, which necessitates checking whether the mode change was successful.
 
 Some paths in the code are hard-coded at the moment, because I have not yet decided where to put the files.
