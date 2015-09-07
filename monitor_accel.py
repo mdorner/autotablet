@@ -33,7 +33,7 @@ def open_accelerometer(name):
 		
 def close_accelerometer(accel):
 	for desc in accel:
-		close(desc)
+		desc.close()
 
 def accels_readable(accels):
 	ret = True
