@@ -1,5 +1,5 @@
-## Autotablet
-# Automatic mode switching for convertable notebooks
+# Autotablet
+### Automatic mode switching for convertable notebooks
 
 This project is currently at best in an alpha stage. The code runs, but require modification of some hard-coded paths.
 
