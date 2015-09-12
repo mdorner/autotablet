@@ -103,7 +103,7 @@ def find_accelerometers(device_path="/sys/bus/iio/devices/"):
                 accelerometers.append(path.join(device_path,directory))
     return accelerometers
 
-def main(conf="/home/michael/code/TabletControl/midor/inputDevices.json"):
+def main(conf="/etc/autotablet/inputDevices.json"):
 	devices = tc.load_device_configuration(conf)
 	accelerometers = find_accelerometers()
 #	print("Found accelerometers: " + str(accelerometers))
