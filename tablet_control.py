@@ -26,8 +26,17 @@ ctms = {
         }
 
 def rotate_input(device, orientation):
+    """
+    Rotate the input of a device to the given orientation
+
+    device: the device you want to rotate
+    orientation: the orientation to switch to
+
+    return: whether the operation was a complete success
+    """
     if orientation not in ctms:
         print("No such orientation")
+
    #this construction is necessary because every one of the matrix entries
         #has to be passed as single parameter not as one string
     args = ["xinput", "set-prop", device, "Coordinate Transformation Matrix"]
@@ -36,11 +45,21 @@ def rotate_input(device, orientation):
     return subprocess.call(args) == 0
 
 def rotate_screen(orientation):
-    #change orientation to one of normal, left, right, inverse
+    """
+    Change orientation of the screen.
+    
+    orientation: one of normal, left, right, inverse
+    return: whether the operation was a success
+    """
     return subprocess.call(["xrandr", "-o", "%s" % orientation]) == 0
 
 def xinput_device_action(device, action):
-    #call a simple actions such as enable or disable for a device
+    """call a simple actions such as enable or disable for a device
+
+    device: the device by the identifier known to xinput
+    action: the xinput action
+    return: whether the operation was a success
+    """
     return subprocess.call(["xinput","%s" %action,"%s" % device]) == 0
 
 def set_normal(devices):
@@ -109,7 +128,12 @@ def set_scratchpad(devices):
     return all_ok 
 
 def load_device_configuration(filename):
-    #read input devices from config
+    """
+    Read input devices from config.
+
+    filename: name the JSON file containing the input-devices
+    return: a list of devices
+    """
     with open(filename,"r") as conf:
         devs = json.load(conf)
     return devs
