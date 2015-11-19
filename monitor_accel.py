@@ -10,11 +10,18 @@ You should have received a copy of the GNU General Public License along with thi
 """
 import sys
 import os
-from os import path
 import time
 import tablet_control as tc
+from os import path
 
 def open_all_accelerometers(devices):
+    """
+    Open all accelerometer device files
+    
+    devices: the directory of the devices
+    
+    return: the accelerometers
+    """
     accels = []
     for accel in devices:
         x, y, scale = open_accelerometer(accel)
@@ -22,20 +29,38 @@ def open_all_accelerometers(devices):
     return accels
 
 def close_all_accelerometers(accels):
+    """Close all accelerometer files"""
     for accel in accels:
         close_accelerometer(accel)
 
 def open_accelerometer(name):
+    """
+    Open a particular accelerometer's device files
+    
+    name: the path to the accelerometer
+
+    return: the opened files
+    """
     x_axis = open(path.join(name, 'in_accel_x_raw'))
     y_axis = open(path.join(name, 'in_accel_y_raw'))
     scale = open(path.join(name, 'in_accel_scale'))
     return x_axis, y_axis, scale
 
 def close_accelerometer(accel):
+    """
+    Close a particular accelerometer
+    """
     for desc in accel:
         desc.close()
 
 def accels_readable(accels):
+    """
+    Check if the accelerometer's files are readable
+
+    accels: file-handles for the accelerometers
+
+    return: whether the handles are readable
+    """
     ret = True
     for accel in accels:
         x,y,scale = accel
@@ -44,6 +69,13 @@ def accels_readable(accels):
         return True
 
 def read_accel(accel):
+    """
+    Read x and y value from accelerometer
+
+    accel: the accelerometer
+
+    return: the x and y value as well as the scale value as tuple
+    """
     for desc in accel:
         desc.seek(0)
     x,y,scale = accel
@@ -53,6 +85,13 @@ def read_accel(accel):
     return (xValue, yValue, scaleValue)
 
 def determine_mode(accel):
+    """
+    Logic implementing the mode detection based on the x,y and scale values
+
+    accel: the accelerometer
+
+    return: the mode as a string
+    """
     xVal, yVal, scaleVal = read_accel(accel)
 #	print("x: " + str(xVal) + " y: " + str(yVal) +
 #				 " scale: " + str(scaleVal))
@@ -78,6 +117,15 @@ def determine_mode(accel):
     return mode
 
 def switch_mode(devices, mode):
+    """
+    Call the mode's configuration routine defined in the tc module based on the 
+    mode.
+
+    devices: the devices we modify
+    mode: the mode the device is in
+
+    return: whether the operation was a success
+    """
     ret = False
     if "tablet" in mode:
         if mode.startswith("i"):
@@ -96,6 +144,14 @@ def switch_mode(devices, mode):
     return ret
 
 def find_accelerometers(device_path="/sys/bus/iio/devices/"):
+    """
+    Locate accelerometers in the device path
+
+    device_path: the location where the files from which the value can be read
+    are found
+    
+    return: a list of accelerometer
+    """
     accelerometers = []
     for directory in os.listdir(device_path):
         with open(path.join(device_path, directory, 'name')) as candidate:
