@@ -161,9 +161,8 @@ def find_accelerometers(device_path="/sys/bus/iio/devices/"):
 
 def main(conf="/etc/autotablet/inputDevices.json"):
     devices = tc.load_device_configuration(conf)
-    accelerometers = find_accelerometers()
 #    print("Found accelerometers: " + str(accelerometers))
-    accels = open_all_accelerometers(accelerometers)
+    accels = open_all_accelerometers(find_accelerometers())
     previous = "unknown"
     try:
         while(accels_readable(accels)):
