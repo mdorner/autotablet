@@ -10,8 +10,8 @@ You should have received a copy of the GNU General Public License along with thi
 """
 import subprocess
 import sys
-import time
 import json
+from time import sleep
 
 #TODO: replace "handle failure" comments with logging suitable for a daemon
 
@@ -139,16 +139,20 @@ def load_device_configuration(filename):
     return devs
 
 def main(mode="normal", orientation="normal"):
-    if mode == "normal":
-        set_normal(devices)
-    elif mode == "tent":
-        set_tent(devices)
-    elif mode == "tablet":
-        set_tablet(devices, orientation)
-    elif mode == "scratchpad":
-        set_scratchpad(devices)
-    else:
-        print("Unsupported mode")	
+    ret = False
+    while not ret:
+        if mode == "normal":
+            ret = set_normal(devices)
+        elif mode == "tent":
+            ret = set_tent(devices)
+        elif mode == "tablet":
+            ret = set_tablet(devices, orientation)
+        elif mode == "scratchpad":
+            ret = set_scratchpad(devices)
+        else:
+            ret = True
+            print("Unsupported mode")	
+        sleep(1.0)
 
 if __name__ == '__main__':
     devices = load_device_configuration("/etc/autotablet/inputDevices.json")	
