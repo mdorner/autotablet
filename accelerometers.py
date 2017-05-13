@@ -2,11 +2,17 @@
 """
 Copyright (C) 2015 Michael G. Dorner
 
-This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 3 of the License, or (at your option) any later version.
+This program is free software; you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free Software
+Foundation; either version 3 of the License, or (at your option) any later
+version.
 
-This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+This program is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+PARTICULAR PURPOSE. See the GNU General Public License for more details.
 
-You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>. 
+You should have received a copy of the GNU General Public License along with
+this program; if not, see <http://www.gnu.org/licenses/>.
 """
 from os import path
 from os import listdir
@@ -21,7 +27,7 @@ def find_accelerometers(device_path):
 
     device_path: the location where the files from which the value can be read
     are found
-    
+
     return: a list of accelerometer
     """
     accelerometers = []
@@ -34,9 +40,9 @@ def find_accelerometers(device_path):
 def open_all_accelerometers(devices):
     """
     Open all accelerometer device files
-    
+
     devices: the directory of the devices
-    
+
     return: the accelerometers
     """
     accels = []
@@ -48,7 +54,7 @@ def open_all_accelerometers(devices):
 def open_accelerometer(name):
     """
     Open a particular accelerometer's device files
-    
+
     name: the path to the accelerometer
 
     return: the opened files
@@ -96,7 +102,7 @@ def read_accel(accel):
     """
     for desc in accel:
         desc.seek(0)
-    x, y, z, scale = accel #these are actually the files 
+    x, y, z, scale = accel #these are actually the files
     scaleValue = float(scale.read())
     val_x = float(x.read()) * scaleValue
     val_y = float(y.read()) * scaleValue
@@ -114,7 +120,7 @@ def main():
             sleep(1.0)
     except OSError:
         print("Cannot recover from error" + str(sys.exc_info()[0]))
-        close_all_accelerometers(accels)	
+        close_all_accelerometers(accels)
         sys.exit(1)
 
 if __name__ == "__main__":
