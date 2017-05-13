@@ -6,7 +6,7 @@ This program is free software; you can redistribute it and/or modify it under th
 
 This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
 
-You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>. 
+You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
 """
 import subprocess
 import sys
@@ -22,7 +22,7 @@ ctms = {
         "normal":  "1 0 0 0 1 0 0 0 1",
         "left":    "0 -1 1 1 0 0 0 0 1",
         "right":   "0 1 0 -1 0 1 0 0 1",
-        "inverted": "-1 0 1 0 -1 1 0 0 1" 
+        "inverted": "-1 0 1 0 -1 1 0 0 1"
         }
 
 def rotate_input(device, orientation):
@@ -47,7 +47,7 @@ def rotate_input(device, orientation):
 def rotate_screen(orientation):
     """
     Change orientation of the screen.
-    
+
     orientation: one of normal, left, right, inverse
     return: whether the operation was a success
     """
@@ -89,7 +89,7 @@ def set_tent(devices):
             for dev in items:
                 ret = xinput_device_action(dev, "enable")
                 all_ok &= ret
-                ret = rotate_input(dev, "inverted")	
+                ret = rotate_input(dev, "inverted")
                 all_ok &= ret
     return all_ok
 
@@ -123,9 +123,9 @@ def set_scratchpad(devices):
                 for dev in items:
                     ret = xinput_device_action(dev, "enable")
                     all_ok &= ret
-                    ret = rotate_input(dev, "normal")	
+                    ret = rotate_input(dev, "normal")
                     all_ok &= ret
-    return all_ok 
+    return all_ok
 
 def load_device_configuration(filename):
     """
@@ -151,15 +151,14 @@ def main(mode="normal", orientation="normal"):
             ret = set_scratchpad(devices)
         else:
             ret = True
-            print("Unsupported mode")	
+            print("Unsupported mode")
         sleep(1.0)
 
 if __name__ == '__main__':
-    devices = load_device_configuration("/etc/autotablet/inputDevices.json")	
-    if len(sys.argv) > 2:
-        main(sys.argv[1], sys.argv[2])
-    elif len(sys.argv) > 1:
-        main(sys.argv[1])
-    else:
-        main()
-
+    devices = load_device_configuration("/etc/autotablet/inputDevices.json")
+        if len(sys.argv) > 2:
+            main(sys.argv[1], sys.argv[2])
+        elif len(sys.argv) > 1:
+            main(sys.argv[1])
+        else:
+            main()

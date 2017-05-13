@@ -6,7 +6,7 @@ This program is free software; you can redistribute it and/or modify it under th
 
 This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
 
-You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>. 
+You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
 """
 import sys
 import tablet_control as tc
@@ -34,11 +34,11 @@ def determine_mode(accel):
         if yVal < -4:
              mode = "normal"
         elif yVal < 1:
-                mode = "scratchpad"	
+                mode = "scratchpad"
         elif yVal < 6:
                 mode = "itablet"
         elif yVal < 10:
-                mode = "tent"	
+                mode = "tent"
         else:
                 mode = "unknown"
     else:
@@ -50,7 +50,7 @@ def determine_mode(accel):
 
 def switch_mode(devices, mode):
     """
-    Call the mode's configuration routine defined in the tc module based on the 
+    Call the mode's configuration routine defined in the tc module based on the
     mode.
 
     devices: the devices we modify
@@ -79,7 +79,7 @@ def switch_mode(devices, mode):
 def main(conf="/etc/autotablet/inputDevices.json"):
     devices = tc.load_device_configuration(conf)
 #    print("Found accelerometers: " + str(accelerometers))
-    accels = acmon.get_acceleromters("/sys/bus/iio/devices/") 
+    accels = acmon.get_acceleromters("/sys/bus/iio/devices/")
     previous = "unknown"
     try:
         while(acmon.accels_readable(accels)):
@@ -92,11 +92,15 @@ def main(conf="/etc/autotablet/inputDevices.json"):
     except OSError:
         print("Cannot recover from error" + str(sys.exc_info()[0]))
         tc.set_normal(devices)
-        acmon.close_all_accelerometers(accels)	
+        acmon.close_all_accelerometers(accels)
         sys.exit(1)
+    except KeyboardInterrupt:
+        print("Terminated by user")
+        tc.set_normal(devices)
+        acmon.close_all_accelerometers(accels)
+        sys.exit(0)
     tc.set_normal(devices)
-    acmon.close_all_accelerometers(accels)	
+    acmon.close_all_accelerometers(accels)
 
 if __name__ == '__main__':
     main()
-
