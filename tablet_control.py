@@ -162,9 +162,9 @@ def main(mode="normal", orientation="normal"):
 
 if __name__ == '__main__':
     devices = load_device_configuration("/etc/autotablet/inputDevices.json")
-        if len(sys.argv) > 2:
-            main(sys.argv[1], sys.argv[2])
-        elif len(sys.argv) > 1:
-            main(sys.argv[1])
-        else:
-            main()
+    if len(sys.argv) > 2:
+        main(sys.argv[1], sys.argv[2])
+    elif len(sys.argv) > 1:
+        main(sys.argv[1])
+    else:
+        main()

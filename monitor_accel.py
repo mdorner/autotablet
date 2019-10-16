@@ -109,4 +109,5 @@ def main(conf="/etc/autotablet/inputDevices.json"):
     acmon.close_all_accelerometers(accels)
 
 if __name__ == '__main__':
-    main()
+    args = [] if len(sys.argv) < 2 else [' '.join(sys.argv[1:])]
+    main(*args)
