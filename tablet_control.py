@@ -117,7 +117,7 @@ def set_tablet(devices, orientation):
     return all_ok
 
 def set_scratchpad(devices):
-    rotate_screen("normal")
+    rotate_screen("inverted")
     all_ok = True
     for category, items in devices.items():
         if category in ["trackpoints", "touchpads", "touchscreens"]:
@@ -129,7 +129,7 @@ def set_scratchpad(devices):
                 for dev in items:
                     ret = xinput_device_action(dev, "enable")
                     all_ok &= ret
-                    ret = rotate_input(dev, "normal")
+                    ret = rotate_input(dev, "inverted")
                     all_ok &= ret
     return all_ok
 
