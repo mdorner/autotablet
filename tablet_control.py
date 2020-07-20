@@ -146,7 +146,9 @@ def load_device_configuration(filename):
 
 def main(mode="normal", orientation="normal"):
     ret = False
-    while not ret:
+    count = 0
+    retry_limit = 10
+    while not ret and count < retry_limit:
         if mode == "normal":
             ret = set_normal(devices)
         elif mode == "tent":
@@ -159,6 +161,7 @@ def main(mode="normal", orientation="normal"):
             ret = True
             print("Unsupported mode")
         sleep(1.0)
+        count = count + 1
 
 if __name__ == '__main__':
     devices = load_device_configuration("/etc/autotablet/inputDevices.json")
